@@ -4,11 +4,14 @@ Think deeper. Decide better.
 Thinkora is a Python CLI application that helps users capture and organize important decisions in a structured way.
 
 ## Features
-- Add decisions with title, deadline, and importance level
-- Add multiple options for each decision
+- Add decisions with titles and options
 - Save decisions using JSON
-- View previously saved decisions
-- Data persists even after restarting the application
+- View saved decisions
+- Evaluate existing decisions
+- Define decision criteria
+- Assign importance to each criterion
+- Score each option
+- Receive personalized recommendations
 
 ## Built With
 - Python
@@ -16,9 +19,9 @@ Thinkora is a Python CLI application that helps users capture and organize impor
 - Git & Github
 
 ## Future Plans
-- Weighted decision criteria
-- Decision scoring system
+- Save evaluation history
 - Reflection notes
+- Decision timelines
 - GUI version
 - Web application
 

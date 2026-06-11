@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 def add_decision():
     title = input("Decision Title: ")
@@ -172,13 +173,83 @@ def evaluate_decision():
 
     print(f"\n🏆 Recommended Option: {winner}")
     print(f"Score: {scores[winner]}")
+    evaluation = {"Date": datetime.now().strftime("%d-%m-%Y %H:%M"), "Winner": winner, "Scores": scores}
+    if "Evaluations" not in selected_decision:
+        selected_decision["Evaluations"] = []
+
+    selected_decision["Evaluations"].append(evaluation)
+    with open("decisions.json", "w") as file:
+        json.dump(decisions, file, indent=4)
+
+    print("\nEvaluation saved successfully!")
+
+def view_evaluation_history():
+
+    print("\n===== EVALUATION HISTORY =====")
+
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("No decisions found.")
+        return
+
+    if len(decisions) == 0:
+        print("No decisions found.")
+        return
+
+    print("\nSelect a Decision:")
+
+    for index, decision in enumerate(decisions, start=1):
+        print(f"{index}. {decision['Title']}")
+
+    try:
+        choice = int(input("\nEnter your choice: "))
+        if choice < 1 or choice > len(decisions):
+            print("Invalid choice.")
+            return
+
+    except ValueError:
+         print("Please enter a valid number.")
+         return
+
+    selected_decision = decisions[choice - 1]
+
+    print("\nSelected Decision:")
+    print(selected_decision["Title"])
+
+    if "Evaluations" not in selected_decision:
+        print("\nNo evaluations found for this decision.")
+        return
+
+    if len(selected_decision["Evaluations"]) == 0:
+        print("\nNo evaluations found for this decision.")
+        return
+    print(f"\nThis decision has been evaluated {len(selected_decision['Evaluations'])} time(s).")
+
+    print("\n===== PAST EVALUATIONS =====")
+
+    for index, evaluation in enumerate(selected_decision["Evaluations"], start=1):
+        print(f"\nEvaluation {index}")
+        print(f"Date: {evaluation['Date']}")
+        print(f"Winner: {evaluation['Winner']}")
+
+        print("\nScores:")
+
+        for option, score in evaluation["Scores"].items():
+            print(f"{option}: {score}")
+
+        print("-" * 30)
+
 
 while True:
     print("\n===== THINKORA =====")
     print("1. Add Decision")
     print("2. View Decisions")
     print("3. Evaluate Existing Decision")
-    print("4. Exit")
+    print("4. View Evaluation History")
+    print("5. Exit")
 
     choice = int(input("Enter your choice: "))
 
@@ -192,6 +263,9 @@ while True:
         evaluate_decision()
 
     elif choice == 4:
+        view_evaluation_history()
+
+    elif choice == 5:
         print("Thank you for using Thinkora!")
         break
 

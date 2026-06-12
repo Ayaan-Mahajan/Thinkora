@@ -242,6 +242,23 @@ def view_evaluation_history():
 
         print("-" * 30)
 
+    if "Final_Choice" in selected_decision:
+        print("\n===== FINAL CHOICE =====")
+        print(f"Choice: {selected_decision['Final_Choice']}")
+        print(f"Date: {selected_decision['Final_Date']}")
+
+    mark_choice = input("\nDo you want to make your final choice? (y/n): ").lower()
+    if mark_choice == "y":
+        print("\nAvailable Options:")
+        for option in selected_decision["Options"]:
+            print(f"- {option}")
+        final_choice = input( "\nEnter your final choice: ")
+
+        selected_decision["Final_Choice"] = final_choice
+        selected_decision["Final_Date"] = datetime.now().strftime("%d-%m-%Y %H:%M")
+        with open("decisions.json", "w") as file:
+            json.dump(decisions, file, indent=4)
+        print("\nFinal choice saved successfully!")
 
 while True:
     print("\n===== THINKORA =====")

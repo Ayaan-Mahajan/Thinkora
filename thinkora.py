@@ -17,7 +17,9 @@ def add_decision():
     "Title": title,
     "Deadline": deadline,
     "Importance": importance,
-    "Options": options
+    "Options": options,
+    "Evaluations": [],
+    "Reflections": []
      }
 
     try:
@@ -120,6 +122,8 @@ def evaluate_decision():
     choice = int(input("\nChoose a decision: "))
 
     selected_decision = decisions[choice - 1]
+    if "Reflections" not in selected_decision:
+        selected_decision["Reflections"] = []
 
     print("\nSelected Decision:")
     print(selected_decision["Title"])
@@ -173,7 +177,7 @@ def evaluate_decision():
 
     print(f"\n🏆 Recommended Option: {winner}")
     print(f"Score: {scores[winner]}")
-    evaluation = {"Date": datetime.now().strftime("%d-%m-%Y %H:%M"), "Winner": winner, "Scores": scores}
+    evaluation = {"Date": datetime.now().strftime("%d-%m-%Y %H:%M"), "Winner": winner, "Scores": scores, "Criteria": criteria}
     if "Evaluations" not in selected_decision:
         selected_decision["Evaluations"] = []
 
@@ -182,6 +186,20 @@ def evaluate_decision():
         json.dump(decisions, file, indent=4)
 
     print("\nEvaluation saved successfully!")
+    add_reflection = input(
+    "\nWould you like to add a reflection? (y/n): "
+    ).lower()
+    if add_reflection == "y":
+        reflection = input("\nEnter your reflection: ")
+        selected_decision["Reflections"].append(
+               {
+                       "Date": datetime.now().strftime("%d-%m-%Y %H:%M"),
+                       "Note": reflection
+                }
+           )
+        with open("decisions.json", "w") as file:
+            json.dump(decisions, file, indent=4)
+        print("\nReflection saved successfully!")
 
 def view_evaluation_history():
 
@@ -260,13 +278,546 @@ def view_evaluation_history():
             json.dump(decisions, file, indent=4)
         print("\nFinal choice saved successfully!")
 
+def view_reflections():
+
+    print("\n===== VIEW REFLECTIONS =====")
+
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("No decisions found.")
+        return
+
+    if len(decisions) == 0:
+        print("No decisions found.")
+        return
+    print("\nSelect a Decision:")
+
+    for index, decision in enumerate(decisions, start=1):
+        print(f"{index}. {decision['Title']}")
+
+    choice = int(input("\nChoose a decision: "))
+    selected_decision = decisions[choice - 1]
+    if "Reflections" not in selected_decision:
+        selected_decision["Reflections"] = []
+    if len(selected_decision["Reflections"]) == 0:
+        print("\nNo reflections found.")
+        return
+    print("\n===== REFLECTIONS =====")
+    print(f"\nDecision: {selected_decision['Title']}")
+    for index, reflection in enumerate(selected_decision["Reflections"], start=1):
+        print(f"\nReflection {index}")
+        print(f"Date: {reflection['Date']}")
+        print("Note:")
+        print(reflection["Note"])
+        print("\n" + "-" * 40)
+
+def decision_analytics():
+
+    print("\n===== DECISION ANALYTICS =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("No decisions found.")
+        return
+
+    if len(decisions) == 0:
+        print("No decisions found.")
+        return
+    total_decisions = len(decisions)
+    total_evaluations = 0
+    total_reflections = 0
+    final_choices = 0
+    for decision in decisions:
+        if "Evaluations" in decision:
+            total_evaluations += len(decision["Evaluations"])
+        if "Reflections" in decision:
+            total_reflections += len(decision["Reflections"])
+        if "Final_Choice" in decision:
+            final_choices += 1
+    if total_decisions > 0:
+        average_evaluations = (total_evaluations / total_decisions)
+    else:
+        average_evaluations = 0
+    print(f"\nTotal Decisions: {total_decisions}")
+
+    print(
+        f"Total Evaluations: {total_evaluations}"
+    )
+
+    print(
+        f"Total Reflections: {total_reflections}"
+    )
+
+    print(
+        f"Final Choices Made: {final_choices}"
+    )
+
+    print(
+        f"Average Evaluations per Decision: "
+        f"{average_evaluations:.2f}"
+    )
+    
+def decision_patterns():
+    final_choices=0
+    high_importance_decisions = 0
+    high_importance_reflections = 0
+    high_importance_evaluations = 0
+    high_importance_final_choices = 0
+    print("\n===== DECISION PATTERNS =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("No decisions found.")
+        return
+    if len(decisions) == 0:
+        print("No decisions found.")
+        return
+    total_evaluations = 0
+    reflected_decisions = 0
+    total_decisions = len(decisions)
+    for decision in decisions:
+        if "Evaluations" in decision:
+            total_evaluations += len(decision["Evaluations"])
+        if ("Reflections" in decision and len(decision["Reflections"]) > 0):
+            reflected_decisions += 1
+        if "Final_Choice" in decision:
+            final_choices += 1
+        if decision["Importance"] == "High":
+            high_importance_decisions += 1
+
+            if "Evaluations" in decision:
+                high_importance_evaluations += len(decision["Evaluations"])
+            if ("Reflections" in decision and len(decision["Reflections"]) > 0):
+                high_importance_reflections += 1
+            if "Final_Choice" in decision:
+                high_importance_final_choices += 1
+                
+    average_evaluations = ( total_evaluations / total_decisions)
+    if average_evaluations >= 3:
+        decision_style = "Analytical Thinker"
+    elif reflected_decisions >= (total_decisions / 2):
+        decision_style = "Reflective Thinker"
+    elif average_evaluations <= 1:
+        decision_style = "Fast Decider"
+    else:
+        decision_style = "Balanced Thinker"
+    print(
+           f"\n[Decision Style]\n "
+           f"{decision_style}"
+    )
+    if average_evaluations <= 1:
+        confidence_pattern = ("You generally trust your initial judgment.")
+    elif average_evaluations <= 3:
+        confidence_pattern = ("You usually seek some reassurance before deciding.")
+    else:
+        confidence_pattern = ("You often revisit decisions to gain certainty before committing.")
+    print(
+           f"\n[Confidence Pattern]\n"
+           f"{confidence_pattern}"
+    )
+    commitment_rate = (final_choices / total_decisions) * 100
+    if commitment_rate >= 75:
+        commitment_pattern = ("You usually follow through and commit to your decisions.")
+    elif commitment_rate >= 40:
+        commitment_pattern = ("You finalize some decisions while leaving others open." )
+    else:
+        commitment_pattern = ("You often keep your options open and delay commitment.")
+    print(
+           f"\n[Commitment Pattern]\n"
+           f"{commitment_pattern}"
+     )
+
+    print(
+           f"Commitment Rate: "
+           f"{commitment_rate:.2f}%"
+     )
+    reflection_rate = (reflected_decisions / total_decisions) * 100
+    if reflection_rate >= 70:
+        self_awareness = ("High")
+    elif reflection_rate >= 40:
+        self_awareness = ("Moderate")
+    else:
+        self_awareness = ("Developing")
+    print("\n[Self-Awareness Level]")
+    print(
+           f"{self_awareness}"
+    )
+
+    print(
+           f"Reflection Rate: "
+          f"{reflection_rate:.2f}%"
+     )
+    if high_importance_decisions == 0:
+        major_detector = ("You haven't recorded any High Importance decisions yet.")
+    else:
+        avg_high_evaluations = (high_importance_evaluations / high_importance_decisions)
+        high_reflection_rate = (high_importance_reflections / high_importance_decisions ) * 100
+        high_commitment_rate = (high_importance_final_choices / high_importance_decisions ) * 100
+        if avg_high_evaluations >= 3:
+            major_detector = ("You spend extra time evaluating major decisions before committing.")
+        elif high_reflection_rate >= 50:
+            major_detector = ("You often reflect deeply on important life choices.")
+        elif high_commitment_rate >= 75:
+            major_detector = ("You trust yourself and commit confidently to major decisions.")
+        else:
+            major_detector = ("You approach major decisions thoughtfully while balancing action and reflection.")
+    print("\n[Major Decision Detector]")
+    print(major_detector)
+
+    if (decision_style == "Analytical Thinker" and reflection_rate >= 50):
+        personalized_insight = (
+                "You are highly reflective and analytical. "
+                "You invest significant effort into understanding "
+                "important choices before acting."
+         )
+    elif (decision_style == "Fast Decider" and commitment_rate < 50):
+        personalized_insight = (
+                "You tend to trust your instincts while keeping "
+                "options open. You may benefit from committing "
+                "more confidently once you've made a choice."
+        )
+    elif (decision_style == "Balanced Thinker" and commitment_rate >= 50):
+        personalized_insight = (
+                "You balance thought and action well. "
+                "You reflect on experiences and usually "
+                "commit once you feel prepared."
+        )
+    else:
+        personalized_insight = (
+                "You may benefit from trusting yourself more often. "
+                "Your tendency to revisit major decisions suggests "
+                "a desire for certainty before acting."
+        )
+    print("\n[Thinkora Insight]")
+    print(personalized_insight)
+
+def top_priorities():
+
+    print("\n===== TOP PRIORITIES =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("No decisions found.")
+        return
+    if len(decisions) == 0:
+        print("No decisions found.")
+        return
+    priority_counts = {}
+    for decision in decisions:
+        if "Evaluations" in decision:
+            for evaluation in decision["Evaluations"]:
+                if "Criteria" in evaluation:
+                    for criterion, importance in evaluation["Criteria"]:
+                        if criterion not in priority_counts:
+                            priority_counts[criterion] = 0
+                        priority_counts[criterion] += 1
+    print()
+    for criterion, count in priority_counts.items():
+        if count == 1:
+            print(f"{criterion}: {count} time")
+        else:
+            print(f"{criterion}: {count} times")
+
+    most_valued = max(priority_counts, key=priority_counts.get)
+    print("\nMost Valued Criterion:")
+    print(most_valued)
+
+def recommendation_trust():
+    print("\n===== RECOMMENDATION TRUST =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("No decisions found.")
+        return
+    if len(decisions) == 0:
+        print("No decisions found.")
+        return
+    recommendations_followed = 0
+    recommendations_ignored = 0
+    for decision in decisions:
+        total_recommendations = ( recommendations_followed + recommendations_ignored)
+        if ("Final_Choice" in decision and "Evaluations" in decision and len(decision["Evaluations"]) > 0):
+            latest_evaluation = decision["Evaluations"][-1]
+            recommended_option = latest_evaluation["Winner"]
+            final_choice = decision["Final_Choice"]
+            if recommended_option == final_choice:
+                recommendations_followed += 1
+            else:
+                recommendations_ignored += 1
+    if total_recommendations == 0:
+        print("No finalized decisions with recommendations found.")
+        return
+    else:
+        trust_score = ( recommendations_followed / total_recommendations) * 100
+    print(
+           f"\nRecommendations Followed: "
+           f"{recommendations_followed}"
+    )
+
+    print(
+           f"Recommendations Ignored: "
+           f"{recommendations_ignored}"
+    )
+
+    print(
+            f"\nTrust Score: "
+            f"{trust_score:.2f}%"
+    )
+
+def overthinking_detector():
+
+    print("\n===== OVERTHINKING DETECTOR =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("No decisions found.")
+        return
+    if len(decisions) == 0:
+        print("No decisions found.")
+        return
+    overthinking_detected = False
+    for decision in decisions:
+        if "Evaluations" in decision:
+            evaluation_count = len(decision["Evaluations"])
+            if evaluation_count >= 5:
+                print(
+                       f"\nDecision: "
+                       f"{decision['Title']}" )
+
+                print(
+                       f"Evaluations: "
+                       f"{evaluation_count}" )
+
+                print(
+                       "\n⚠️ Thinkora Insight:")
+
+                print(
+                       "You may be seeking certainty "
+                       "rather than clarity.")
+
+                print(
+                       "Consider whether additional "
+                       "evaluations would truly "
+                       "change your outcome.")
+                overthinking_detected = True
+            elif evaluation_count >= 3:
+                print(
+                f"\nDecision: "
+                f"{decision['Title']}")
+
+                print(
+                f"Evaluations: "
+                f"{evaluation_count}")
+
+                print(
+                "\n🤔 Thinkora Insight:")
+
+                print(
+                "You approach this decision "
+                "carefully before committing.")
+                overthinking_detected = True
+            elif evaluation_count >= 1:
+                print(
+                f"\nDecision: "
+                f"{decision['Title']}")
+
+                print(
+                f"Evaluations: "
+                f"{evaluation_count}")
+
+                print(
+                "\n✅ Thinkora Insight:")
+
+                print(
+                "You explored your options "
+                "without getting stuck in "
+                "analysis.")
+                overthinking_detected = True
+    if overthinking_detected == False:
+        print("No evaluated decisions found.")
+
+def decision_growth():
+
+    print("\n===== DECISION GROWTH INSIGHTS =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("No decisions found.")
+        return
+    if len(decisions) == 0:
+        print("No decisions found.")
+        return
+    reflected_decisions = 0
+    finalized_decisions = 0
+    total_evaluations = 0
+    recommendations_followed = 0
+    recommendations_total = 0
+    for decision in decisions:
+        if ("Reflections" in decision and len(decision["Reflections"]) > 0):
+            reflected_decisions += 1
+        if "Evaluations" in decision:
+            total_evaluations += len(decision["Evaluations"])
+        if "Final_Choice" in decision:
+            finalized_decisions += 1
+        if ("Final_Choice" in decision and "Evaluations" in decision and len(decision["Evaluations"]) > 0):
+            latest_evaluation = decision["Evaluations"][-1]
+            recommendations_total += 1
+            if (latest_evaluation["Winner"]== decision["Final_Choice"]):
+                recommendations_followed += 1
+    if finalized_decisions == 0:
+        print("Not enough decision history yet.")
+        return
+    reflection_rate = (reflected_decisions / len(decisions)) * 100
+    avg_evaluations = (total_evaluations / finalized_decisions)
+    if recommendations_total > 0:
+        trust_rate = (recommendations_followed / recommendations_total) * 100
+    else:
+        trust_rate = 0
+    if reflection_rate >= 50:
+        print(
+        "\n📝 You regularly reflect on "
+        "your decisions and learn "
+        "from them.")
+    else:
+        print(
+        "\n📝 You could benefit from "
+        "reflecting more often on "
+        "important choices." )
+    if avg_evaluations <= 2:
+        print(
+        "⚡ You tend to make decisions "
+        "efficiently without excessive "
+        "analysis.")
+    elif avg_evaluations <= 4:
+        print(
+        "🤔 You balance careful thinking "
+        "with action.")
+    else:
+        print(
+        "🚨 You often spend a lot of time "
+        "evaluating before deciding.")
+    if trust_rate >= 75:
+        print(
+        "🤝 You trust your decision "
+        "process and commit confidently.")
+    elif trust_rate >= 50:
+        print(
+        "🤝 You sometimes trust your "
+        "recommendations while leaving "
+        "room for intuition.")
+    else:
+        print(
+        "🤝 You frequently override "
+        "recommendations and rely on "
+        "personal judgment.")
+    print(
+    "\n🌱 Thinkora Insight:")
+    print(
+    "Your decision-making journey "
+    "is evolving. Every choice "
+    "helps you understand yourself "
+    "a little better.")
+
+def record_outcome():
+
+    print("\n===== RECORD DECISION OUTCOME =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("No decisions found.")
+        return
+    if len(decisions) == 0:
+        print("No decisions found.")
+        return
+    has_evaluated_decision = False
+    print("\n===== SELECT A DECISION =====")
+    for index, decision in enumerate(decisions, start=1):
+        if ("Evaluations" in decision and len(decision["Evaluations"]) > 0):
+            has_evaluated_decision = True
+        if "Outcome" in decision:
+            status = "📝 Outcome Recorded"
+        elif "Final_Choice" in decision:
+            status = "✓ Finalized"
+        elif ("Evaluations" in decision and len(decision["Evaluations"]) > 0 ):
+            status = "✓ Evaluated"
+
+        else:
+            status = "⚠ Not evaluated"
+        print(
+        f"{index}. "
+        f"{decision['Title']} "
+        f"{status}")
+    if has_evaluated_decision == False:
+        print("No evaluated decisions found.")
+        return
+    
+    choice = int(
+    input("\nChoose a decision: "))
+    selected_decision = decisions[choice - 1]
+    if ("Evaluations" not in selected_decision or len(selected_decision["Evaluations"]) == 0):
+        print("\nThis decision hasn't been evaluated yet.")
+        return
+    if "Outcome" in selected_decision:
+        overwrite = input("\nAn outcome already exists. Overwrite? (y/n): ").lower()
+        if overwrite != "y":
+            print("Outcome not updated.")
+            return
+        
+    print("\nHow do you feel about this decision now?")
+    print("1. Very Happy")
+    print("2. Mostly Happy")
+    print("3. Neutral")
+    print("4. Slightly Regretful")
+    print("5. Strongly Regretful")
+    rating = int(input("\nChoose a rating: "))
+    add_note = input("\nWould you like to reflect on this outcome? (y/n): ").lower()
+    note = ""
+    if add_note == "y":
+        if rating <= 2:
+            note = input(
+            "\nWhat made this decision work out well?\n> " )
+        elif rating == 3:
+            note = input(
+            "\nLooking back, what would you do differently?\n> ")
+        else:
+            note = input(
+            "\nWhat lesson will you carry into future decisions?\n> ")
+    outcome = {
+    "Date": datetime.now().strftime("%d-%m-%Y %H:%M"),
+    "Rating": rating,
+    "Note": note}
+    selected_decision["Outcome"] = outcome
+    with open("decisions.json", "w") as file:
+        json.dump( decisions,  file,  indent=4)
+    print(
+    "\nOutcome recorded successfully!")
+      
 while True:
     print("\n===== THINKORA =====")
     print("1. Add Decision")
     print("2. View Decisions")
     print("3. Evaluate Existing Decision")
     print("4. View Evaluation History")
-    print("5. Exit")
+    print("5. View Reflections")
+    print("6. Decision Analytics")
+    print("7. Decision Patterns")
+    print("8. Top Priorities")
+    print("9. Recommendation Trust Score")
+    print("10. Overthinking Detector")
+    print("11. Decision Growth Insights")
+    print("12. Record Decision Outcome")
+    print("13. Exit")
 
     choice = int(input("Enter your choice: "))
 
@@ -283,6 +834,30 @@ while True:
         view_evaluation_history()
 
     elif choice == 5:
+        view_reflections()
+
+    elif choice == 6:
+        decision_analytics()
+
+    elif choice == 7:
+        decision_patterns()
+
+    elif choice==8:
+        top_priorities()
+
+    elif choice==9:
+        recommendation_trust()
+
+    elif choice==10:
+        overthinking_detector()
+
+    elif  choice==11:
+        decision_growth()
+
+    elif choice==12:
+        record_outcome()
+        
+    elif choice == 13:
         print("Thank you for using Thinkora!")
         break
 

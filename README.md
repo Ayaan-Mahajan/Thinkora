@@ -4,9 +4,12 @@ Think deeper. Decide better.
 Thinkora is a Python-based decision intelligence system that helps users make thoughtful choices, reflect on outcomes, and understand their own decision-making patterns over time.
 
 Most decision-making tools focus on answering:
-- "What should I choose?"
+
+"What should I choose?"
+
 Thinkora goes a step further and asks:
-- "How do I make decisions, and what can I learn from them?"
+
+ "How do I make decisions, and what can I learn from them?"
 
 By combining structured evaluations, behavioral insights, reflections, and outcome tracking, Thinkora transforms decision-making into a process of self-discovery and growth.
 

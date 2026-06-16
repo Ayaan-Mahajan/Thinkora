@@ -1132,7 +1132,70 @@ def decision_personality():
         print(
         "Continue balancing reflection "
         "with decisive action.")
-      
+
+def regret_pattern_analysis():
+
+    print(
+        "\n===== REGRET PATTERN ANALYSIS =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print(
+        "No decisions found.")
+        return
+    if len(decisions) == 0:
+        print(
+        "No decisions found.")
+        return
+    regret_count = 0
+    regret_reasons = {}
+    for decision in decisions:
+        if "Outcome" in decision:
+            rating = decision["Outcome"]["Rating"]
+            if rating >= 4:
+                regret_count += 1
+                importance = decision.get("Importance", "Unknown")
+                regret_reasons[importance] = regret_reasons.get( importance, 0) + 1
+    if regret_count == 0:
+        print(
+        "\n🎉 No regret patterns detected.")
+        print(
+        "Your recorded decisions have generally aligned with your expectations.")
+        print(
+        "\n🧠 Thinkora Insight:")
+        print(
+        "You appear to make decisions that align well with your values and expectations. Continue balancing reflection with decisive action.")
+        return
+    most_common_regret = max(
+    regret_reasons,
+    key=regret_reasons.get)
+    regret_frequency = regret_reasons[
+    most_common_regret]
+    print(
+    f"\nMost regrets occurred in "
+    f"{most_common_regret}-importance decisions.")
+    print(
+    f"Occurrences: {regret_frequency}")
+    if most_common_regret == "High":
+        insight = (
+        "You tend to regret high-stakes decisions. "
+        "Slow down, gather information, and avoid rushing major choices.")
+    elif most_common_regret == "Medium":
+        insight = (
+        "Some mid-level decisions may benefit from a bit more reflection "
+        "before committing.")
+    elif most_common_regret == "Low":
+        insight = (
+        "Minor decisions appear to create unnecessary regret. "
+        "Trust yourself more on low-risk choices.")
+    else:
+        insight = (
+        "Regret patterns are emerging, but more data is needed "
+        "to draw stronger conclusions.")
+    print("\n🧠 Thinkora Insight:")
+    print(insight)
+
 while True:
     print("\n===== THINKORA =====")
     print("1. Add Decision")
@@ -1147,7 +1210,7 @@ while True:
     print("10. Overthinking Detector")
     print("11. Decision Growth Insights")
     print("12. Record Decision Outcome")
-    print("13. Decision Learning")
+    print("13. Decision Insights")
     print("14. Exit")
 
     choice = int(input("Enter your choice: "))
@@ -1188,8 +1251,33 @@ while True:
     elif choice==12:
         record_outcome()
 
-    elif choice==13:
-        decision_personality()
+    elif choice == 13:
+       while True:
+           print("\n===== DECISION INSIGHTS =====")
+           print("1. Outcome Insights")
+           print("2. Decision Timeline")
+           print("3. Personality Profile")
+           print("4. Regret Pattern Analysis")
+           print("5. Back")
+           insight_choice = input(
+            "\nChoose an option: ")
+           if insight_choice == "1":
+                outcome_insights()
+
+           elif insight_choice == "2":
+               decision_timeline()
+
+           elif insight_choice == "3":
+               decision_personality()
+
+           elif insight_choice == "4":
+               regret_pattern_analysis()
+
+           elif insight_choice == "5":
+               break
+           else:
+               print(
+                "Invalid choice.")
         
     elif choice == 14:
         print("Thank you for using Thinkora!")

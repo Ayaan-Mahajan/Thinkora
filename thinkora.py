@@ -878,6 +878,83 @@ def outcome_insights():
         "before committing to future choices.")
         print(
         "Every regret carries a lesson." )
+
+def decision_timeline():
+
+    print("\n===== DECISION TIMELINE =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("No decisions found.")
+        return
+    if len(decisions) == 0:
+        print("No decisions found.")
+        return
+    print("\nSelect a Decision:")
+
+    for index, decision in enumerate(decisions, start=1):
+        print(
+            f"{index}. "
+            f"{decision['Title']}"
+        )
+
+    choice = int( input("\nChoose a decision: "))
+    selected_decision = decisions[ choice - 1  ]
+    print(
+        f"\nDecision:\n"
+        f"{selected_decision['Title']}")
+    if "Evaluations" in selected_decision:
+        for index, evaluation in enumerate( selected_decision["Evaluations"], start=1):
+            if index == 1:
+                event = "Evaluated"
+            else:
+                event = "Re-evaluated"
+            print(
+            f"\n{evaluation['Date']}")
+            print(
+            f"→ {event}")
+            print(
+            f"Winner: "
+            f"{evaluation['Winner']}")
+    if "Reflections" in selected_decision:
+        for reflection in selected_decision["Reflections"]:
+            print(
+            f"\n{reflection['Date']}")
+            print(
+            "→ Reflection")
+            print(
+            f"\"{reflection['Note']}\"")
+    if "Final_Choice" in selected_decision:
+        print(
+        f"\n{selected_decision['Final_Date']}")
+        print(
+        "→ Final Choice")
+        print(
+        f"{selected_decision['Final_Choice']}")
+    if "Outcome" in selected_decision:
+        outcome = selected_decision["Outcome"]
+        print(
+        f"\n{outcome['Date']}")
+        print(
+        "→ Outcome")
+        rating = outcome["Rating"]
+        if rating == 1:
+            feeling = "😁 Very Happy"
+        elif rating == 2:
+            feeling = "😊 Mostly Happy"
+        elif rating == 3:
+            feeling = "😐 Neutral"
+        elif rating == 4:
+            feeling = "😕 Slightly Regretful"
+        else:
+            feeling = "😔 Strongly Regretful"
+        print(feeling)
+        if outcome["Note"] != "":
+            print(
+            "\nOutcome Reflection:")
+            print(
+            f"\"{outcome['Note']}\"")
       
 while True:
     print("\n===== THINKORA =====")
@@ -935,7 +1012,7 @@ while True:
         record_outcome()
 
     elif choice==13:
-        outcome_insights()
+        decision_timeline()
         
     elif choice == 14:
         print("Thank you for using Thinkora!")

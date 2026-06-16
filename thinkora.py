@@ -904,8 +904,10 @@ def decision_timeline():
     print(
         f"\nDecision:\n"
         f"{selected_decision['Title']}")
+    timeline_events = 0
     if "Evaluations" in selected_decision:
         for index, evaluation in enumerate( selected_decision["Evaluations"], start=1):
+            timeline_events += 1  
             if index == 1:
                 event = "Evaluated"
             else:
@@ -917,22 +919,28 @@ def decision_timeline():
             print(
             f"Winner: "
             f"{evaluation['Winner']}")
+            
     if "Reflections" in selected_decision:
         for reflection in selected_decision["Reflections"]:
+            timeline_events += 1  
             print(
             f"\n{reflection['Date']}")
             print(
             "→ Reflection")
             print(
             f"\"{reflection['Note']}\"")
+            
     if "Final_Choice" in selected_decision:
+        timeline_events += 1
         print(
         f"\n{selected_decision['Final_Date']}")
         print(
         "→ Final Choice")
         print(
         f"{selected_decision['Final_Choice']}")
+        
     if "Outcome" in selected_decision:
+        timeline_events += 1
         outcome = selected_decision["Outcome"]
         print(
         f"\n{outcome['Date']}")
@@ -955,6 +963,175 @@ def decision_timeline():
             "\nOutcome Reflection:")
             print(
             f"\"{outcome['Note']}\"")
+    if timeline_events == 0:
+        print(
+        "\nThis decision has not developed yet.")
+        print(
+        "Start by evaluating your options "
+        "to begin building its timeline." )
+
+def decision_personality():
+
+    print("\n===== YOUR DECISION PROFILE =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("No decisions found.")
+        return
+    if len(decisions) == 0:
+        print("No decisions found.")
+        return
+    total_evaluations = 0
+    evaluated_decisions = 0
+    reflections = 0
+    finalized = 0
+    satisfied = 0
+    neutral = 0
+    regretful = 0
+    recommendations_followed = 0
+    recommendations_ignored = 0
+    for decision in decisions:
+        if ( "Evaluations" in decision and len(decision["Evaluations"]) > 0 ):
+            evaluated_decisions += 1
+            total_evaluations += len( decision["Evaluations"])
+        if "Reflections" in decision:
+            reflections += len(decision["Reflections"])
+        if "Final_Choice" in decision:
+            finalized += 1
+            if ("Evaluations" in decision and len(decision["Evaluations"]) > 0):
+                latest_winner = decision["Evaluations"][-1]["Winner"]
+                if (latest_winner== decision["Final_Choice"]):
+                    recommendations_followed += 1
+                else:
+                    recommendations_ignored += 1
+        if "Outcome" in decision:
+            rating = decision["Outcome"]["Rating"]
+            if rating <= 2:
+                satisfied += 1
+            elif rating == 3:
+                neutral += 1
+            else:
+                regretful += 1
+    if evaluated_decisions > 0:
+        average_evaluations = (
+        total_evaluations
+        / evaluated_decisions)
+    else:
+        average_evaluations = 0
+    if average_evaluations <= 2:
+        evaluation_style = "Decisive"
+    elif average_evaluations <= 4:
+        evaluation_style = "Thoughtful"
+    else:
+        evaluation_style = "Analytical"
+
+    if finalized > 0:
+        reflection_ratio = (
+        reflections
+        / finalized )
+    else:
+        reflection_ratio = 0
+    if reflection_ratio >= 1:
+        reflection_style = "Reflective"
+    elif reflection_ratio >= 0.5:
+        reflection_style = "Self-aware"
+    else:
+        reflection_style = "Action-oriented"
+
+    trust_total = (
+    recommendations_followed
+    + recommendations_ignored)
+    if trust_total > 0:
+        trust_percentage = (
+        recommendations_followed
+        / trust_total
+    ) * 100
+    else:
+        trust_percentage = 0
+    if trust_percentage >= 80:
+        commitment_style = "Conviction Driven"
+    elif trust_percentage >= 50:
+        commitment_style = "Balanced Explorer"
+    else:
+        commitment_style = "Independent Thinker"
+
+    if (satisfied >= neutral and satisfied >= regretful):
+        outcome_style = ("Optimistic Decision Maker" )
+    elif (neutral >= satisfied and neutral >= regretful):
+        outcome_style = (
+        "Adaptive Learner")
+    else:
+        outcome_style = (
+        "Growth-Seeking Rebuilder")
+
+    print(
+    f"\n🧠 Evaluation Style: "
+    f"{evaluation_style}")
+    print(
+    f"🪞 Reflection Style: "
+    f"{reflection_style}")
+    print(
+    f"🎯 Commitment Style: "
+    f"{commitment_style}")
+    print(
+    f"🌱 Outcome Pattern: "
+    f"{outcome_style}")
+
+    if ( evaluation_style == "Thoughtful"  and reflection_style == "Reflective"):
+        personality = "Reflective Strategist"
+    elif ( evaluation_style == "Decisive" and commitment_style == "Conviction Driven"):
+        personality = "Confident Executor"
+    elif (evaluation_style == "Analytical" and reflection_style == "Reflective"):
+        personality = "Insightful Analyst"
+    elif (commitment_style == "Independent Thinker"):
+        personality = "Independent Pathfinder"
+    else:
+        personality = "Adaptive Decision Maker"
+    print(
+    f"\n🏆 Your Thinkora Personality:")
+    print(
+    f"✨ {personality}")
+
+    print("\nStrengths:")
+    if evaluation_style != "Decisive":
+        print(
+        "✓ You carefully consider your options.")
+    if reflection_style == "Reflective":
+        print(
+        "✓ You actively learn from experience.")
+    if commitment_style == "Conviction Driven":
+        print(
+        "✓ You trust your judgment and commit." )
+    if outcome_style == "Optimistic Decision Maker":
+        print(
+        "✓ Your decisions tend to satisfy you.")
+
+    print("\nWatch Outs:")
+    watch_outs = 0
+    if evaluation_style == "Analytical":
+        print(
+        "⚠ Avoid chasing perfect certainty.")
+        watch_outs += 1
+    if commitment_style == "Independent Thinker":
+        print(
+        "⚠ Stay open to outside perspectives.")
+        watch_outs += 1
+    if outcome_style == "Growth-Seeking Rebuilder":
+        print(
+        "⚠ Be kind to yourself when reflecting on regrets.")
+        watch_outs += 1
+    if reflection_style == "Action-oriented":
+        print(
+        "⚠ Consider reflecting more often.")
+        watch_outs += 1
+
+    if watch_outs == 0:
+        print(
+        "✓ No major blind spots detected.")
+        print(
+        "Continue balancing reflection "
+        "with decisive action.")
       
 while True:
     print("\n===== THINKORA =====")
@@ -1012,7 +1189,7 @@ while True:
         record_outcome()
 
     elif choice==13:
-        decision_timeline()
+        decision_personality()
         
     elif choice == 14:
         print("Thank you for using Thinkora!")

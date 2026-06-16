@@ -1,4 +1,9 @@
 # Thinkora
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![Storage](https://img.shields.io/badge/Storage-JSON-orange)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+![Type](https://img.shields.io/badge/Type-CLI-lightgrey)
+
 Think deeper. Decide better.
 
 Thinkora is a Python-based decision intelligence system that helps users make thoughtful choices, reflect on outcomes, and understand their own decision-making patterns over time.

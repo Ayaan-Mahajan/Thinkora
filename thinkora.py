@@ -802,6 +802,82 @@ def record_outcome():
         json.dump( decisions,  file,  indent=4)
     print(
     "\nOutcome recorded successfully!")
+
+def outcome_insights():
+
+    print("\n===== DECISION OUTCOME INSIGHTS =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("No decisions found.")
+        return
+    if len(decisions) == 0:
+        print("No decisions found.")
+        return
+    satisfied = 0
+    neutral = 0
+    regretful = 0
+    for decision in decisions:
+        if "Outcome" in decision:
+            rating = decision["Outcome"]["Rating"]
+
+            if rating <= 2:
+                satisfied += 1
+            elif rating == 3:
+                neutral += 1
+            else:
+                regretful += 1
+
+    total_outcomes = ( satisfied + neutral  + regretful)
+    if total_outcomes == 0:
+        print(
+        "No recorded outcomes found.")
+        return
+    print(
+    f"\nSatisfied Decisions: "
+    f"{satisfied}")
+    print(
+    f"\nNeutral Decisions: "
+    f"{neutral}")
+    print(
+    f"\nRegretful Decisions: "
+    f"{regretful}")
+
+    if satisfied >= neutral and satisfied >= regretful:
+        print(
+        "\n🌟 Thinkora Insight:")
+        print(
+        "Most of your past decisions "
+        "have worked out well." )
+        print(
+        "You appear to trust your values "
+        "and commit to choices that align "
+        "with what matters to you." )
+        print(
+        "Keep balancing reflection "
+        "with action.")
+    elif neutral >= satisfied and neutral >= regretful:
+        print(
+        "\n🌱 Thinkora Insight:")
+        print(
+        "Many of your decisions led "
+        "to mixed outcomes." )
+        print(
+        "You may benefit from identifying "
+        "which criteria truly predict "
+        "satisfaction for you.")
+    else:
+        print(
+        "\n🧠 Thinkora Insight:")
+        print(
+        "Several decisions resulted "
+        "in regret." )
+        print(
+        "Consider reflecting more deeply "
+        "before committing to future choices.")
+        print(
+        "Every regret carries a lesson." )
       
 while True:
     print("\n===== THINKORA =====")
@@ -817,7 +893,8 @@ while True:
     print("10. Overthinking Detector")
     print("11. Decision Growth Insights")
     print("12. Record Decision Outcome")
-    print("13. Exit")
+    print("13. Decision Learning")
+    print("14. Exit")
 
     choice = int(input("Enter your choice: "))
 
@@ -856,8 +933,11 @@ while True:
 
     elif choice==12:
         record_outcome()
+
+    elif choice==13:
+        outcome_insights()
         
-    elif choice == 13:
+    elif choice == 14:
         print("Thank you for using Thinkora!")
         break
 

@@ -1196,6 +1196,189 @@ def regret_pattern_analysis():
     print("\n🧠 Thinkora Insight:")
     print(insight)
 
+def decision_streak_system():
+    print("\n===== DECISION STREAK =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+    except ( FileNotFoundError,  json.JSONDecodeError):
+        print("No decisions found.")
+        return
+    if len(decisions) == 0:
+        print("No decisions found.")
+        return
+    reflection_streak = 0
+    evaluation_streak = 0
+    outcome_streak = 0
+    longest_reflection = 0
+    longest_evaluation = 0
+    longest_outcome = 0
+    for decision in decisions:
+        if ("Reflections" in decision  and  len(decision["Reflections"]) > 0):
+            reflection_streak += 1
+        else:
+            reflection_streak = 0
+        if (reflection_streak>longest_reflection):
+            longest_reflection = (reflection_streak)
+        if ("Evaluations" in decision and len(decision["Evaluations"]) > 0):
+            evaluation_streak += 1
+        else:
+            evaluation_streak = 0
+        if (evaluation_streak>longest_evaluation):
+            longest_evaluation = evaluation_streak
+        if "Outcome" in decision:
+            outcome_streak += 1
+        else:
+            outcome_streak = 0
+        if (outcome_streak>longest_outcome):
+            longest_outcome = outcome_streak
+    print()
+    print(
+            f"🪞 Longest Reflection Streak: {longest_reflection}")
+    print(
+            f"🧠 Longest Evaluation Streak: {longest_evaluation}")
+    print(
+            f"🎯 Longest Outcome Streak: {longest_outcome}")
+    print()
+    print("===== THINKORA INSIGHT =====")
+    print()
+    if longest_reflection >= 5:
+        print("🌱 You consistently reflect on your decisions.")
+    else:
+        print("🪞 Consider reflecting more frequently after making decisions." )
+    if longest_evaluation >= 5:
+        print("🧠 Structured decision-making seems to be a strong habit.")
+    else:
+        print("📋 Try evaluating decisions more often.")
+    if longest_outcome >= 5:
+        print("🎯 You do a good job learning from outcomes.")
+    else:
+        print("📈 Tracking outcomes can help you grow as a decision-maker.")
+    print()
+    if (longest_reflection >= 5 and longest_outcome >= 5):
+        print( "🏆 Thinkora Observation: You appear to have strong decision-learning habits.")
+    elif longest_reflection >= 5:
+        print("✨ Thinkora Observation: Reflection seems to be one of your strengths.")
+    else:
+        print( "🚀 Thinkora Observation: There is plenty of room to strengthen your decision habits.")
+
+def bias_detector():
+
+    print(
+
+        "\n===== DECISION BIAS DETECTOR =====")
+    try:
+        with open("decisions.json", "r" ) as file:
+            decisions = json.load(file)
+    except ( FileNotFoundError, json.JSONDecodeError):
+        print("No decisions found." )
+        return
+    analysis_paralysis = 0
+    recommendation_avoidance = 0
+    reflection_neglect = 0
+    impulsive_commitment = 0
+    outcome_neglect = 0
+    for decision in decisions:
+
+        if ("Evaluations" in decision and len(decision["Evaluations"]) >= 2):
+            analysis_paralysis += 1
+        if ("Final_Choice" in decision and "Evaluations" in decision and len(  decision["Evaluations"]) > 0):
+            latest_winner = (decision["Evaluations"][-1]["Winner"])
+            if latest_winner != decision["Final_Choice"]:
+                recommendation_avoidance += 1
+        if ("Final_Choice" in decision and( "Reflections" not in decision or len(decision["Reflections"]) == 0)):
+            reflection_neglect += 1
+        if ("Final_Choice" in decision and( "Evaluations" not in decision or len(decision["Evaluations"]) == 0)):
+            impulsive_commitment += 1
+        if ("Final_Choice" in decision and "Outcome" not in decision):
+            outcome_neglect += 1
+    print()
+    print("Potential Biases:\n")
+    if analysis_paralysis > 0:
+        print(
+        "✓ Analysis Paralysis")
+    if (
+        analysis_paralysis == 0
+        and
+        recommendation_avoidance == 0
+        and
+        reflection_neglect == 0
+        and
+        impulsive_commitment == 0
+        and
+        outcome_neglect == 0):
+        print( "🎉 No significant biases detected." )
+    print()
+    print( "===== THINKORA OBSERVATION =====")
+    print()
+    if analysis_paralysis > 0:
+        print("🧠 You occasionally revisit decisions multiple times before committing.")
+    if recommendation_avoidance > 0:
+        print("📋 You sometimes trust your own judgment over Thinkora recommendations.")
+    if reflection_neglect > 0:
+        print("🪞 Consider reflecting more often after making decisions.")
+    if (analysis_paralysis == 0 and recommendation_avoidance == 0 and reflection_neglect == 0 and impulsive_commitment == 0 and outcome_neglect == 0):
+        print("✨ Your recent decisions appear balanced and intentional.")
+
+def wisdom_summary():
+    print("\n===== THINKORA WISDOM SUMMARY =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+    except (FileNotFoundError,  json.JSONDecodeError):
+        print("No decisions found.")
+        return
+    if len(decisions)==0:
+        print( "No decisions found." )
+        return
+    total_decisions = len(decisions)
+    outcomes = 0
+    reflections = 0
+    evaluations = 0
+    for decision in decisions:
+        if "Outcome" in decision:
+            outcomes += 1
+        if ( "Reflections" in decision and len( decision["Reflections"]) > 0):
+            reflections += 1
+        if ("Evaluations" in decision and len(decision["Evaluations"]) > 0):
+            evaluations += 1
+    print()
+    print(f"Decisions Made : {total_decisions}")
+    print(f"Decisions Evaluated : {evaluations}")
+    print(f"Decisions Reflected On : {reflections}")
+    print(f"Outcomes Recorded : {outcomes}")
+    reflection_rate = (reflections/total_decisions)*100
+    evaluation_rate = ( evaluations/total_decisions)*100
+    outcome_rate=(outcomes/total_decisions)*100
+    print()
+    print(f"Reflection Rate : {reflection_rate:.1f}%")
+    print(f"Evaluation Rate : {evaluation_rate:.1f}%")
+    print(f"Outcome Rate : {outcome_rate:.1f}%")
+    print()
+    print("===== THINKORA OBSERVATION =====")
+    print()
+    if reflection_rate >= 70:
+        print( "🌱 Strongest Trait : Reflective Decision Maker")
+    elif evaluation_rate >= 70:
+        print("🧠 Strongest Trait : Analytical Decision Maker")
+    elif outcome_rate >= 70:
+        print("🎯 Strongest Trait : Learning From Experience")
+    else:
+        print( "🚀 Strongest Trait : Developing Decision Habits")
+    print()
+    print("===== THINKORA WISDOM =====")
+    print()
+    if (reflection_rate >= 70 and outcome_rate >= 70):
+        print("🏆 You appear to be developing strong decision-learning habits.")
+    elif reflection_rate >= 70:
+        print("🌱 Reflection seems to be one of your greatest strengths.")
+    elif evaluation_rate >= 70:
+        print("🧠 You tend to approach decisions analytically.")
+    elif outcome_rate >= 70:
+        print("🎯 You actively learn from past experiences.")
+    else:
+        print("🚀 You're steadily building better decision habits over time.")
+
 while True:
     print("\n===== THINKORA =====")
     print("1. Add Decision")
@@ -1211,7 +1394,8 @@ while True:
     print("11. Decision Growth Insights")
     print("12. Record Decision Outcome")
     print("13. Decision Insights")
-    print("14. Exit")
+    print("14. Decision Intelligence")
+    print("15. Exit")
 
     choice = int(input("Enter your choice: "))
 
@@ -1278,8 +1462,11 @@ while True:
            else:
                print(
                 "Invalid choice.")
+
+    elif choice==14:
+        wisdom_summary()
         
-    elif choice == 14:
+    elif choice == 15:
         print("Thank you for using Thinkora!")
         break
 

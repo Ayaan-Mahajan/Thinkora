@@ -14,7 +14,9 @@ Most decision tools answer a single question:
 Thinkora attempts to answer three more:
 
 *Why did I choose it?*
+
 *Did it work out?*
+
 *What can I learn about myself from this decision?*
 
 By combining structured evaluations, behavioral insights, reflections, and outcome tracking, Thinkora transforms decision-making into a process of self-discovery and continuous improvement.
@@ -150,6 +152,7 @@ It's designed to help them become better at deciding for themselves.
 Built by Ayaan Mahajan as part of a journey from tutorial-driven learning toward building meaningful software products from scratch.
 
 Thinkora is based on a simple belief:
+
 **Every decision teaches us something.**
 
 **The challenge is remembering to pay attention.**

@@ -4,6 +4,16 @@ from datetime import datetime
 def invalid_choice():
     print("Invalid choice.")
 
+def safe_int(prompt):
+    while True:
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print("Please enter a valid number." )
+
+def pause():
+    input("\nPress Enter to continue...")
+
 ##########################################
 # DECISION MANAGEMENT
 ##########################################
@@ -1426,16 +1436,22 @@ def analytics_menu():
             "\nEnter your choice: ")
         if choice == "1":
             decision_analytics()
+            pause()
         elif choice == "2":
             decision_patterns()
+            pause()
         elif choice == "3":
             top_priorities()
+            pause()
         elif choice == "4":
             recommendation_trust()
+            pause()
         elif choice == "5":
             overthinking_detector()
+            pause()
         elif choice == "6":
             decision_growth()
+            pause()
         elif choice == "7":
             break
         else:
@@ -1463,12 +1479,16 @@ def insights_menu():
             "\nEnter your choice: ")
         if choice == "1":
             outcome_insights()
+            pause()
         elif choice == "2":
             decision_timeline()
+            pause()
         elif choice == "3":
             decision_personality()
+            pause()
         elif choice == "4":
             regret_pattern_analysis()
+            pause()
         elif choice == "5":
             break
         else:
@@ -1494,12 +1514,15 @@ def behavioral_menu():
             "\nEnter your choice: ")
         if choice == "1":
             decision_streak_system()
+            pause()
             
         elif choice == "2":
             bias_detector()
+            pause()
             
         elif choice == "3":
             wisdom_summary()
+            pause()
             
         elif choice == "4":
             break
@@ -1521,7 +1544,7 @@ def main_menu():
         print("9. Behavorial Intelligence")
         print("10. Exit")
 
-        choice = int(input("Enter your choice: "))
+        choice = safe_int("Enter your choice: ")
 
         if choice == 1:
             add_decision()

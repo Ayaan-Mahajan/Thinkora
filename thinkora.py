@@ -1,6 +1,12 @@
 import json
 from datetime import datetime
 
+def invalid_choice():
+    print("Invalid choice.")
+
+##########################################
+# DECISION MANAGEMENT
+##########################################
 def add_decision():
     title = input("Decision Title: ")
     deadline = input("Deadline: ")
@@ -99,6 +105,9 @@ def decision_scorer():
             total_score += score * importance
         print(f"{option_name}: Final Score = {total_score}")
 
+##########################################
+# EVALUATIONS
+##########################################
 def evaluate_decision():
     print("\n===== EVALUATE DECISION =====")
     try:
@@ -225,7 +234,7 @@ def view_evaluation_history():
     try:
         choice = int(input("\nEnter your choice: "))
         if choice < 1 or choice > len(decisions):
-            print("Invalid choice.")
+            invalid_choice()
             return
 
     except ValueError:
@@ -278,6 +287,9 @@ def view_evaluation_history():
             json.dump(decisions, file, indent=4)
         print("\nFinal choice saved successfully!")
 
+##########################################
+# REFLECTIONS
+##########################################
 def view_reflections():
 
     print("\n===== VIEW REFLECTIONS =====")
@@ -314,6 +326,9 @@ def view_reflections():
         print(reflection["Note"])
         print("\n" + "-" * 40)
 
+##########################################
+# ANALYTICS
+##########################################
 def decision_analytics():
 
     print("\n===== DECISION ANALYTICS =====")
@@ -1196,6 +1211,9 @@ def regret_pattern_analysis():
     print("\n🧠 Thinkora Insight:")
     print(insight)
 
+##########################################
+# BEHAVIORAL INTELLIGENCE
+##########################################
 def decision_streak_system():
     print("\n===== DECISION STREAK =====")
     try:
@@ -1379,96 +1397,165 @@ def wisdom_summary():
     else:
         print("🚀 You're steadily building better decision habits over time.")
 
-while True:
-    print("\n===== THINKORA =====")
-    print("1. Add Decision")
-    print("2. View Decisions")
-    print("3. Evaluate Existing Decision")
-    print("4. View Evaluation History")
-    print("5. View Reflections")
-    print("6. Decision Analytics")
-    print("7. Decision Patterns")
-    print("8. Top Priorities")
-    print("9. Recommendation Trust Score")
-    print("10. Overthinking Detector")
-    print("11. Decision Growth Insights")
-    print("12. Record Decision Outcome")
-    print("13. Decision Insights")
-    print("14. Decision Intelligence")
-    print("15. Exit")
+##########################################
+# MENUS
+##########################################
+def analytics_menu():
 
-    choice = int(input("Enter your choice: "))
+    while True:
 
-    if choice == 1:
-        add_decision()
+        print("\n===== ANALYTICS =====")
 
-    elif choice == 2:
-        view_decisions()
+        print("1. Decision Analytics")
 
-    elif choice==3:
-        evaluate_decision()
+        print("2. Decision Patterns")
 
-    elif choice == 4:
-        view_evaluation_history()
+        print("3. Top Priorities")
 
-    elif choice == 5:
-        view_reflections()
+        print("4. Recommendation Trust Score")
 
-    elif choice == 6:
-        decision_analytics()
+        print("5. Overthinking Detector")
 
-    elif choice == 7:
-        decision_patterns()
+        print("6. Decision Growth Insights")
 
-    elif choice==8:
-        top_priorities()
+        print("7. Back")
 
-    elif choice==9:
-        recommendation_trust()
 
-    elif choice==10:
-        overthinking_detector()
+        choice = input(
 
-    elif  choice==11:
-        decision_growth()
+            "\nEnter your choice: ")
+        if choice == "1":
+            decision_analytics()
+        elif choice == "2":
+            decision_patterns()
+        elif choice == "3":
+            top_priorities()
+        elif choice == "4":
+            recommendation_trust()
+        elif choice == "5":
+            overthinking_detector()
+        elif choice == "6":
+            decision_growth()
+        elif choice == "7":
+            break
+        else:
+            print("Invalid choice.")
 
-    elif choice==12:
-        record_outcome()
+def insights_menu():
 
-    elif choice == 13:
-       while True:
-           print("\n===== DECISION INSIGHTS =====")
-           print("1. Outcome Insights")
-           print("2. Decision Timeline")
-           print("3. Personality Profile")
-           print("4. Regret Pattern Analysis")
-           print("5. Back")
-           insight_choice = input(
-            "\nChoose an option: ")
-           if insight_choice == "1":
-                outcome_insights()
+    while True:
 
-           elif insight_choice == "2":
-               decision_timeline()
+        print("\n===== DECISION INSIGHTS =====")
 
-           elif insight_choice == "3":
-               decision_personality()
+        print("1. Outcome Insights")
 
-           elif insight_choice == "4":
-               regret_pattern_analysis()
+        print("2. Decision Timeline")
 
-           elif insight_choice == "5":
-               break
-           else:
-               print(
-                "Invalid choice.")
+        print("3. Personality Profile")
 
-    elif choice==14:
-        wisdom_summary()
+        print("4. Regret Pattern Analysis")
+
+        print("5. Back")
+
+
+        choice = input(
+
+            "\nEnter your choice: ")
+        if choice == "1":
+            outcome_insights()
+        elif choice == "2":
+            decision_timeline()
+        elif choice == "3":
+            decision_personality()
+        elif choice == "4":
+            regret_pattern_analysis()
+        elif choice == "5":
+            break
+        else:
+            print( "Invalid choice." )
+
+def behavioral_menu():
+
+    while True:
+
+        print("\n===== BEHAVIORAL INTELLIGENCE =====")
+
+        print("1. Decision Streak System")
+
+        print("2. Decision Bias Detector")
+
+        print("3. Decision Wisdom Summary")
+
+        print("4. Back")
+
+
+        choice = input(
+
+            "\nEnter your choice: ")
+        if choice == "1":
+            decision_streak_system()
+            
+        elif choice == "2":
+            bias_detector()
+            
+        elif choice == "3":
+            wisdom_summary()
+            
+        elif choice == "4":
+            break
+            
+        else:
+            print( "Invalid choice." )
         
-    elif choice == 15:
-        print("Thank you for using Thinkora!")
-        break
+def main_menu():
+    while True:
+        print("\n===== THINKORA =====")
+        print("1. Add Decision")
+        print("2. View Decisions")
+        print("3. Evaluate Existing Decision")
+        print("4. View Evaluation History")
+        print("5. View Reflections")
+        print("6. Analytics")
+        print("7. Record Decision Outcome")
+        print("8. Decision Insights")
+        print("9. Behavorial Intelligence")
+        print("10. Exit")
 
-    else:
-        print("Invalid choice. Try again.")
+        choice = int(input("Enter your choice: "))
+
+        if choice == 1:
+            add_decision()
+
+        elif choice == 2:
+            view_decisions()
+
+        elif choice==3:
+            evaluate_decision()
+
+        elif choice == 4:
+            view_evaluation_history()
+
+        elif choice == 5:
+            view_reflections()
+
+        elif choice == 6:
+            analytics_menu()
+            
+        elif choice==7:
+            record_outcome()
+
+        elif choice == 8:
+            insights_menu()
+
+        elif choice == 9:
+            behavioral_menu()
+            
+        elif choice == 10:
+            print("Thank you for using Thinkora!")
+            break
+
+        else:
+            invalid_choice()
+
+if __name__ == "__main__":
+    main_menu()

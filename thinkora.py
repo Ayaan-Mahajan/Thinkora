@@ -1529,6 +1529,57 @@ def behavioral_menu():
             
         else:
             print( "Invalid choice." )
+
+def export_report():
+    print("\n===== EXPORT REPORT =====")
+    try:
+        with open("decisions.json", "r") as file:
+            decisions = json.load(file)
+
+    except (FileNotFoundError, json.JSONDecodeError ):
+        print( "No decisions found." )
+        return
+    total_decisions = len(decisions)
+    evaluated = 0
+    reflected = 0
+    outcomes = 0
+    for decision in decisions:
+        if ("Evaluations" in decision and len(decision["Evaluations"]) > 0):
+            evaluated += 1
+        if ("Reflections" in decision and len(decision["Reflections"]) > 0):
+            reflected += 1
+        if ("Outcome" in decision):
+            outcomes += 1
+    if total_decisions > 0:
+        reflection_rate = (reflected/total_decisions) * 100
+        evaluation_rate = (evaluated/total_decisions) * 100
+        outcome_rate = (outcomes/total_decisions) * 100
+    else:
+        reflection_rate = 0
+        evaluation_rate = 0
+        outcome_rate = 0
+    report = f"""===== THINKORA REPORT =====
+    Decisions Made : {total_decisions}
+
+    Decisions Evaluated : {evaluated}
+    
+    Decisions Reflected On : {reflected}
+
+    Outcomes Recorded : {outcomes}
+
+    Reflection Rate : {reflection_rate:.1f}%
+
+    Evaluation Rate : {evaluation_rate:.1f}%
+
+    Outcome Rate : {outcome_rate:.1f}%
+    """
+    with open("thinkora_report.txt", "w") as file:
+        file.write(report)
+    print()
+    print("Report Exported Successfully!")
+    print()
+    print("Saved as thinkora_report.txt")
+
         
 def main_menu():
     while True:
@@ -1542,7 +1593,8 @@ def main_menu():
         print("7. Record Decision Outcome")
         print("8. Decision Insights")
         print("9. Behavorial Intelligence")
-        print("10. Exit")
+        print("10. Export Report")
+        print("11. Exit")
 
         choice = safe_int("Enter your choice: ")
 
@@ -1572,13 +1624,23 @@ def main_menu():
 
         elif choice == 9:
             behavioral_menu()
-            
+
         elif choice == 10:
+            export_report()
+            pause()
+            
+        elif choice == 11:
             print("Thank you for using Thinkora!")
             break
 
         else:
             invalid_choice()
 
+##########################################
+# UTILITIES
+##########################################
+
+
+    
 if __name__ == "__main__":
     main_menu()

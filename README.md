@@ -8,9 +8,11 @@
 Thinkora is a decision intelligence system built in Python that helps users make thoughtful choices, reflect on outcomes, and understand their own decision-making patterns over time.
 
 Most decision-making tools focus on answering:
+
 **"What should I choose?"**
 
 Thinkora goes a step further and asks:
+
 **"How do I make decisions, and what can I learn from them?"**
 
 ## What Thinkora Does
@@ -49,7 +51,8 @@ By combining structured evaluations, behavioral insights, reflections, and outco
 
 ## Architecture
 
-Thinkora
+```
+Thinkora/
 │
 ├── Decision Management
 │   ├── Add Decisions
@@ -76,6 +79,8 @@ Thinkora
 │
 └── Reporting
     └── thinkora_report.txt
+
+```
 
 ## Evolution
 - V1 → Decisions

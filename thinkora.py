@@ -1428,7 +1428,9 @@ def analytics_menu():
 
         print("6. Decision Growth Insights")
 
-        print("7. Back")
+        print("7. Decision Scorer")
+
+        print("8. Back")
 
 
         choice = input(
@@ -1453,6 +1455,9 @@ def analytics_menu():
             decision_growth()
             pause()
         elif choice == "7":
+            decision_scorer()
+            pause()
+        elif choice == "8":
             break
         else:
             print("Invalid choice.")
@@ -1530,6 +1535,42 @@ def behavioral_menu():
         else:
             print( "Invalid choice." )
 
+def decision_management_menu():
+
+    while True:
+        print( "\n===== DECISION MANAGEMENT =====")
+        print( "1. Add Decision" )
+        print("2. View Decisions")
+        print( "3. Evaluate Decision" )
+        print( "4. View Evaluation History" )
+        print("5. View Reflections")
+        print("6. Record Outcome")
+        print( "7. Back" )
+        choice = safe_int("\nEnter your choice: ")
+        if choice == 1:
+            add_decision()
+
+        elif choice == 2:
+            view_decisions()
+
+        elif choice == 3:
+            evaluate_decision()
+
+        elif choice == 4:
+            view_evaluation_history()
+
+        elif choice == 5:
+            view_reflections()
+
+        elif choice == 6:
+            record_outcome()
+
+        elif choice == 7:
+            break
+
+        else:
+            invalid_choice()
+
 def export_report():
     print("\n===== EXPORT REPORT =====")
     try:
@@ -1584,52 +1625,31 @@ def export_report():
 def main_menu():
     while True:
         print("\n===== THINKORA =====")
-        print("1. Add Decision")
-        print("2. View Decisions")
-        print("3. Evaluate Existing Decision")
-        print("4. View Evaluation History")
-        print("5. View Reflections")
-        print("6. Analytics")
-        print("7. Record Decision Outcome")
-        print("8. Decision Insights")
-        print("9. Behavorial Intelligence")
-        print("10. Export Report")
-        print("11. Exit")
+        print("1. Decision Management")
+        print("2. Analytics")
+        print("3. Decision Insights")
+        print("4. Behavioral Intelligence")
+        print("5. Export Report")
+        print("6. Exit")
 
         choice = safe_int("Enter your choice: ")
-
         if choice == 1:
-            add_decision()
+            decision_management_menu()
 
         elif choice == 2:
-            view_decisions()
-
-        elif choice==3:
-            evaluate_decision()
-
-        elif choice == 4:
-            view_evaluation_history()
-
-        elif choice == 5:
-            view_reflections()
-
-        elif choice == 6:
             analytics_menu()
-            
-        elif choice==7:
-            record_outcome()
 
-        elif choice == 8:
+        elif choice == 3:
             insights_menu()
 
-        elif choice == 9:
+        elif choice == 4:
             behavioral_menu()
 
-        elif choice == 10:
+        elif choice == 5:
             export_report()
             pause()
-            
-        elif choice == 11:
+
+        elif choice == 6:
             print("Thank you for using Thinkora!")
             break
 
